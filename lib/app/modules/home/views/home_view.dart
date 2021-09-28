@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:todo_app/app/modules/home/controllers/home_controller.dart';
+import 'package:todo_app/app/modules/home/routing/dialog_route.dart';
 import 'package:todo_app/app/modules/home/views/widgets/add_dialog.dart';
 import 'package:todo_app/app/modules/home/views/widgets/list_items.dart';
 
@@ -32,10 +34,19 @@ class HomeView extends StatelessWidget {
         heroTag: 'add-todo-dialog',
         onPressed: () {
           Get.dialog(
-            AddTodoItemDialog(),
+            AddTodoItemDialog(
+              onSave: (value) => Get.find<HomeController>().addItem(value),
+            ),
             barrierColor: Colors.black54,
           );
           //TODO: make the hero animation work with plain routing
+          // Navigator.of(context).push(
+          //   HeroDialogRoute(
+          //     builder: (context) => AddTodoItemDialog(
+          //       onSave: (value) => Get.find<HomeController>().addItem(value),
+          //     ),
+          //   ),
+          // );
         },
         tooltip: "Add task",
         child: const Icon(Icons.add),

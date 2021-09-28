@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:todo_app/app/data/models/item_model.dart';
 import 'package:todo_app/app/modules/home/controllers/home_controller.dart';
 
+import 'add_dialog.dart';
+
 class ListItems extends StatefulWidget {
   const ListItems({Key? key}) : super(key: key);
 
@@ -11,11 +13,24 @@ class ListItems extends StatefulWidget {
 }
 
 class _ListItemsState extends State<ListItems> {
-  void handleClick(String value) {
+  void handleClick(String value, ToDoItemModel item) {
     switch (value) {
-      case 'Logout':
+      case 'editar':
+        Get.dialog(
+          AddTodoItemDialog(
+            text: item.text,
+            onSave: (value) => Get.find<HomeController>().editItem(
+              item.order,
+              value,
+            ),
+          ),
+          barrierColor: Colors.black54,
+        );
         break;
-      case 'Settings':
+      case 'eliminar':
+        Get.find<HomeController>().deleteItem(
+          item.order,
+        );
         break;
     }
   }
@@ -54,12 +69,19 @@ class _ListItemsState extends State<ListItems> {
                         ),
                       ),
                       trailing: PopupMenuButton<String>(
-                        onSelected: handleClick,
+                        onSelected: (value) => handleClick(value, item),
                         itemBuilder: (BuildContext context) =>
                             {'editar', 'eliminar'}
                                 .map((String choice) => PopupMenuItem<String>(
                                       value: choice,
-                                      child: Text(choice),
+                                      child: Text(
+                                        choice,
+                                        style: TextStyle(
+                                          color: (choice == "eliminar")
+                                              ? Colors.red
+                                              : null,
+                                        ),
+                                      ),
                                     ))
                                 .toList(),
                       ),

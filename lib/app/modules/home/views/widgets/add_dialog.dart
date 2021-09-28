@@ -1,12 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:todo_app/app/modules/home/controllers/home_controller.dart';
 
-class AddTodoItemDialog extends StatelessWidget {
-  AddTodoItemDialog({Key? key}) : super(key: key);
+class AddTodoItemDialog extends StatefulWidget {
+  final String text;
+  final Function(String value) onSave;
+  const AddTodoItemDialog({
+    Key? key,
+    this.text = "",
+    required this.onSave,
+  }) : super(key: key);
 
+  @override
+  State<AddTodoItemDialog> createState() => _AddTodoItemDialogState();
+}
+
+class _AddTodoItemDialogState extends State<AddTodoItemDialog> {
   final textController = TextEditingController();
   final _formKey = GlobalKey<FormState>(debugLabel: '_TODO_form_key');
+
+  @override
+  void initState() {
+    super.initState();
+    textController.text = widget.text;
+  }
+
+  @override
+  void dispose() {
+    textController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +53,6 @@ class AddTodoItemDialog extends StatelessWidget {
         actions: [
           OutlinedButton(
             onPressed: () {
-              textController.text = '';
               Navigator.pop(context);
             },
             child: const Text("Cancelar"),
@@ -40,7 +60,7 @@ class AddTodoItemDialog extends StatelessWidget {
           ElevatedButton(
             onPressed: () {
               if (_formKey.currentState!.validate()) {
-                Get.find<HomeController>().addItem(textController.text);
+                widget.onSave(textController.text);
                 textController.text = '';
                 Navigator.pop(context);
               }

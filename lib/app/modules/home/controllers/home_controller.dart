@@ -21,12 +21,27 @@ class HomeController extends GetxController {
     return [...uncheckeds, ...checkeds];
   }
 
+  void updateList() => update();
+
   void addItem(String item) {
-    print(item);
-    items.add(
-        ToDoItemModel(item, order: 4)); //TODO: fix order for multiple items
+    items.add(ToDoItemModel(
+      item,
+      order: items
+              .reduce((value, element) =>
+                  element.order > value.order ? element : value)
+              .order +
+          1,
+    ));
     update();
   }
 
-  void updateList() => update();
+  editItem(int order, String newText) {
+    items.firstWhere((element) => element.order == order).text = newText;
+    updateList();
+  }
+
+  deleteItem(int order) {
+    items.removeWhere((element) => element.order == order);
+    updateList();
+  }
 }
