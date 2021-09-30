@@ -15,7 +15,7 @@ class AddTodoItemDialog extends StatefulWidget {
 
 class _AddTodoItemDialogState extends State<AddTodoItemDialog> {
   final textController = TextEditingController();
-  final _formKey = GlobalKey<FormState>(debugLabel: '_TODO_form_key');
+  bool validator = true;
 
   @override
   void initState() {
@@ -35,19 +35,11 @@ class _AddTodoItemDialogState extends State<AddTodoItemDialog> {
       tag: 'add-todo-dialog',
       child: AlertDialog(
         title: const Text("Añadir nueva tarea"),
-        content: Form(
-          key: _formKey,
-          child: TextFormField(
-            controller: textController,
-            decoration: const InputDecoration(
-              hintText: "Escribe la tarea",
-            ),
-            validator: (value) {
-              if (value!.isEmpty) {
-                return 'El campo no puede estar vacío';
-              }
-              return null;
-            },
+        content: TextField(
+          controller: textController,
+          decoration: InputDecoration(
+            hintText: "Escribe la tarea",
+            errorText: !validator ? 'El campo no puede estar vacío' : null,
           ),
         ),
         actions: [
@@ -59,7 +51,11 @@ class _AddTodoItemDialogState extends State<AddTodoItemDialog> {
           ),
           ElevatedButton(
             onPressed: () {
-              if (_formKey.currentState!.validate()) {
+              setState(
+                () => validator = textController.text.isEmpty ? false : true,
+              );
+
+              if (validator) {
                 widget.onSave(textController.text);
                 textController.text = '';
                 Navigator.pop(context);

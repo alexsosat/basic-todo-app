@@ -33,20 +33,13 @@ class HomeView extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         heroTag: 'add-todo-dialog',
         onPressed: () {
-          Get.dialog(
-            AddTodoItemDialog(
-              onSave: (value) => Get.find<HomeController>().addItem(value),
+          Navigator.of(context).push(
+            HeroDialogRoute(
+              builder: (context) => AddTodoItemDialog(
+                onSave: (value) => Get.find<HomeController>().addItem(value),
+              ),
             ),
-            barrierColor: Colors.black54,
           );
-          //TODO: make the hero animation work with plain routing
-          // Navigator.of(context).push(
-          //   HeroDialogRoute(
-          //     builder: (context) => AddTodoItemDialog(
-          //       onSave: (value) => Get.find<HomeController>().addItem(value),
-          //     ),
-          //   ),
-          // );
         },
         tooltip: "Add task",
         child: const Icon(Icons.add),
